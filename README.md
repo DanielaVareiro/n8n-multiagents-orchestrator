@@ -6,7 +6,7 @@ An advanced, production-ready multi-agent orchestration ecosystem built entirely
 
 ## 📷 System Architecture
 
-![Main Orchestrator Workflow](./flowchart.png)
+![Main Orchestrator Workflow](./Screenshot%20Principal%20Workflow.png)
 
 *Visual representation of the central coordinator routing requests to specialized agent branches.*
 
