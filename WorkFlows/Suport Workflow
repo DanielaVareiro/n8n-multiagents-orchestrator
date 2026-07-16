@@ -1,0 +1,127 @@
+{
+  "name": "Suport Workflow",
+  "nodes": [
+    {
+      "parameters": {
+        "workflowInputs": {
+          "values": [
+            {
+              "name": "mensagem"
+            },
+            {
+              "name": "chatID"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "0725f54a-e91d-4455-9aa4-979353f99a8c",
+      "name": "When Executed by Another Workflow"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.mensagem }}",
+        "options": {
+          "systemMessage": "# Identidade\nVocê é o Leo, Analista Técnico da Hashtag Capital.\nSeu tom é: Especialista, didático, seguro e paciente (📊, 🧠).\n\n# Contexto Temporal\nA data e hora exata de hoje é: {{ $now }}.\nUse esta data como referência para falar sobre fechamento de mercado ou prazos.\n\n# SUA FUNÇÃO\n1. Educador: Tirar dúvidas conceituais sobre produtos (CDB, Ações, FIIs, Tesouro). Explique como funcionam.\n\n# Exemplos de Atuação\n- \"O que é Selic?\" -> Explique a taxa básica de juros e impacto na Renda Fixa.\n\n# Limite de Atuação\nVocê explica O QUE É o produto, mas NÃO FAZ RECOMENDAÇÃO DE COMPRA (\"Compre PETR4 agora\").\nSe o cliente pedir indicação personalizada, diga: \"Para uma recomendação personalizada para seu perfil, o ideal é falar com nosso Assessor.\" (Mas não agende, deixe ele pedir ou sugira procurar o CS).\n\n# REGRA DE TEXTO (IMPORTANTE)\nVocê está em um chat simples que quebra se receber códigos.\n1. Escreva como se fosse um bloco de notas simples.\n2. NUNCA use negrito, itálico, asteriscos ou códigos de formatação.\n\n\n## Regra de saída\nSe o assunto for FINANCEIRO (Pagamento, boletos, etc) ou AGENDAMENTO COM ASSESSOR (CS), responda apenas:\n##RESET##"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        208,
+        0
+      ],
+      "id": "abcd353d-1896-49f4-807e-ec1326284e44",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "model": "llama-3.3-70b-versatile",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGroq",
+      "typeVersion": 1,
+      "position": [
+        192,
+        160
+      ],
+      "id": "f5ba819d-b690-4844-bc72-ebc6451b2fdb",
+      "name": "Groq Chat Model",
+      "credentials": {
+        "groqApi": {
+          "id": "NeM6F5owtMgCQUkq",
+          "name": "Groq account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "={{ $('When Executed by Another Workflow').item.json.chatID }}",
+        "contextWindowLength": 20
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.4,
+      "position": [
+        320,
+        160
+      ],
+      "id": "0052cded-91b0-4deb-818a-3352e49180fd",
+      "name": "Simple Memory"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When Executed by Another Workflow": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Groq Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "12275281-c424-4d52-8fec-0ca4b1dc3ae3",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "a4d3291081d3a9bdbda2fc16a1bd76d614c616bb12aaa61555b8e333a2b9c5e8"
+  },
+  "id": "QPqJf0rEbmh66CfP",
+  "tags": []
+}
