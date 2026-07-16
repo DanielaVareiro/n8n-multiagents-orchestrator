@@ -1,0 +1,10 @@
+# API Keys & Credentials 
+.env
+*.env
+credentials.json
+secrets.txt
+
+# System Files
+.DS_Store
+Thumbs.db
+desktop.ini
